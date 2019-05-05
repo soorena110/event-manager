@@ -1,6 +1,6 @@
 {
   "name": "web-trace",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "Web tools to change or trace variable in runtime. It works via Console window in Browser DeveloperTool. ;)",
   "main": "./lib/index.js",
   "repository": "https://github.com/soorena110/web-trace.git",
