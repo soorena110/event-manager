@@ -1,12 +1,13 @@
 {
   "name": "web-trace",
-  "version": "0.7.9",
+  "version": "0.7.10",
   "description": "Web tools to change or trace variable in runtime. It works via Console window in Browser DeveloperTool. ;)",
   "main": "./lib/index.js",
   "repository": "https://github.com/soorena110/web-trace.git",
   "typings": "./lib/index.d.ts",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "publish": "npm run build & npm publish --access=public"
   },
   "keywords": [
     "web-trace",
