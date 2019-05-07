@@ -25,6 +25,8 @@ module.exports = () => {
         output: {
             path: path.join(__dirname, './lib'),
             filename: 'index.js',
+            library: 'ModeManagement',
+            libraryTarget: "umd"
         },
         plugins: [
             new UglifyJsPlugin(),

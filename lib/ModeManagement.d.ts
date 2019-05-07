@@ -5,6 +5,7 @@ export declare class ModeManagementClass {
     constructor();
     add(name: string, defaultValue?: boolean): void;
     getEnabled(name: string): boolean;
+    setEnabled(name: string, enability: boolean): void;
     private _setActiveModesFromUrl;
     private _clear;
     private _set;

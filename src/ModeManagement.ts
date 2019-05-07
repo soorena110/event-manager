@@ -35,6 +35,10 @@ export class ModeManagementClass {
         return this._activeModes.indexOf(name) != -1;
     }
 
+    setEnabled(name: string, enability: boolean) {
+        this.modeModifier[name + (enability ? 'On' : 'Off')]();
+    }
+
     private _setActiveModesFromUrl() {
         const urlModeSplit = window.location.href.split('mode=');
         if (urlModeSplit.length >= 2)
