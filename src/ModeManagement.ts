@@ -76,7 +76,3 @@ const ModeManagement = new ModeManagementClass();
 export default ModeManagement;
 
 (window as any).$mode = ModeManagement.modeModifier;
-
-
-ModeManagement.add('noRefresh');
-ModeManagement.add('socket');
