@@ -1,8 +1,11 @@
+import {ModeManagementEventManager, ModeManagementEventHandler} from "./EventHandler";
+
 const ModeManagementLocalStorageKey = 'ModeManagementData';
 
 export class ModeManagementClass {
     private _activeModes = [] as string[];
     private _keys = [] as string[];
+    private _eventHandler = new ModeManagementEventManager();
     public modeModifier = {} as any;
 
     constructor() {
@@ -20,10 +23,23 @@ export class ModeManagementClass {
     add(name: string, defaultValue = false) {
         if (defaultValue && this._activeModes.indexOf(name) == -1)
             this._activeModes.push(name);
-        if (!defaultValue && this._keys.indexOf(name) == -1)
+        if (this._keys.indexOf(name) == -1) {
             this._keys.push(name);
-        this.modeModifier[name + 'On'] = () => this._set(name, true);
-        this.modeModifier[name + 'Off'] = () => this._set(name, false);
+            this.modeModifier[name + 'On'] = () => this._set(name, true);
+            this.modeModifier[name + 'Off'] = () => this._set(name, false);
+        }
+    }
+
+    addEventListener(theEvent: string, theHandler: ModeManagementEventHandler) {
+        this._eventHandler.addEventListener(theEvent, theHandler);
+    }
+
+    removeEventListener(theEvent: string, theHandler: ModeManagementEventHandler) {
+        this._eventHandler.removeEventListener(theEvent, theHandler);
+    }
+
+    removeAllEventListener(theEvent: string) {
+        this._eventHandler.removeAllEventListeners(theEvent);
     }
 
     getEnabled(name: string) {
@@ -36,7 +52,10 @@ export class ModeManagementClass {
     }
 
     setEnabled(name: string, enability: boolean) {
+        if (this.getEnabled(name) == enability)
+            return;
         this.modeModifier[name + (enability ? 'On' : 'Off')]();
+        this._eventHandler.trigger(name, enability)
     }
 
     private _setActiveModesFromUrl() {

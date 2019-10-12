@@ -3,14 +3,14 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = () => {
+module.exports = (env) => {
     return {
         context: path.resolve(''),
-        entry: './src/index.ts',
+        entry: env.dev ? './src/_dev/index.tsx' : './src/index.ts',
         module: {
             rules: [
                 {
-                    test: /\.ts$/,
+                    test: /\.(ts|tsx)$/,
                     use: [{
                         loader: 'awesome-typescript-loader',
                         options: {silent: true}
@@ -20,13 +20,17 @@ module.exports = () => {
             ]
         },
         resolve: {
-            extensions: ['*', '.ts']
+            extensions: ['*', '.ts', '.js', '.tsx']
         },
         output: {
             path: path.join(__dirname, './lib'),
             filename: 'index.js',
             library: 'ModeManagement',
             libraryTarget: "umd"
+        },
+        devServer: {
+            contentBase: './src/_dev',
+            hot: true
         },
         plugins: [
             new UglifyJsPlugin(),
