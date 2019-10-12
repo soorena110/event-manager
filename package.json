@@ -1,6 +1,6 @@
 {
   "name": "web-trace",
-  "version": "1.2.1",
+  "version": "1.2.7",
   "description": "Web tools to change or trace variable in runtime. It works via Console window in Browser DeveloperTool. ;)",
   "main": "./lib/index.js",
   "repository": "https://github.com/soorena110/web-trace.git",
@@ -25,12 +25,14 @@
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^16.9.5",
+    "@types/react-dom": "^16.9.1",
     "awesome-typescript-loader": "^5.2.1",
     "typescript": "^3.4.5",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41.1",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2",
-    "react": "^16.10.2"
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
   }
 }

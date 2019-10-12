@@ -1,9 +1,8 @@
 import {EventTypes, TokenManagerEventHandler, TokenManagerEventHandlerFunctionType} from "./EventHandler";
-import {withTokenChangeSubscription} from "./HOCSubscription";
 
 const tokenName = 'token';
 
-export default class TokenManagerComponent {
+export class TokenManagerComponent {
     private _token ?: string | null;
     private _eventHandler = new TokenManagerEventHandler();
 
@@ -36,6 +35,4 @@ export default class TokenManagerComponent {
     addEventListener(eventName: EventTypes, handler: TokenManagerEventHandlerFunctionType) {
         this._eventHandler.addEventListener(eventName, handler)
     }
-
-    withSubscription = withTokenChangeSubscription
 }

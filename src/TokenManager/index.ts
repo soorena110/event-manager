@@ -1,4 +1,4 @@
-import TokenManagerComponent from "./TokenManagementComponent";
+import {TokenManagerComponent} from "./TokenManagerComponent";
 
 const TokenManager = new TokenManagerComponent();
 export default TokenManager;

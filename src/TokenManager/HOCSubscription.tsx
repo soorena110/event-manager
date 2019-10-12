@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TokenManager from "./index";
 
-export function withTokenChangeSubscription<TComponent>(WrappedComponent: TComponent) {
+export function connectToTokenChange<TComponent>(WrappedComponent: TComponent) {
 
 
     class TokenSubscribedComponent extends React.Component<any> {
