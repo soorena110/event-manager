@@ -5,7 +5,6 @@ import {logActiveModes} from "./_utils";
 
 class ModeManagementClass extends EventHandlerClass {
     public localStorageKey?: string;
-    private _flags = [] as string[];
     private _modes = {} as { [key: string]: any };
     public modeModifier = {} as any;
 
