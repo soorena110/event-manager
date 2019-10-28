@@ -1,6 +1,6 @@
 {
-  "name": "web-trace",
-  "version": "1.2.7",
+  "name": "web-events",
+  "version": "0.6.0",
   "description": "Web tools to change or trace variable in runtime. It works via Console window in Browser DeveloperTool. ;)",
   "main": "./lib/index.js",
   "repository": "https://github.com/soorena110/web-trace.git",
@@ -13,13 +13,14 @@
     "deploy": "npm run build & npm run build:dev & npm run postbuild & npm publish --access=public"
   },
   "keywords": [
-    "web-trace",
+    "web events",
     "mode",
     "management",
     "trace",
     "mode management",
     "token manager",
-    "tools"
+    "tools",
+    "application events"
   ],
   "author": "MohammadReza Azarang",
   "license": "ISC",

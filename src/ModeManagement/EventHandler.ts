@@ -33,3 +33,19 @@ export class ModeManagementEventManager {
         theHandler(...args);
     }
 }
+
+export class EventHandlerClass {
+    protected _eventHandler = new ModeManagementEventManager();
+
+    addEventListener(theEvent: string, theHandler: ModeManagementEventHandler) {
+        this._eventHandler.addEventListener(theEvent, theHandler);
+    }
+
+    removeEventListener(theEvent: string, theHandler: ModeManagementEventHandler) {
+        this._eventHandler.removeEventListener(theEvent, theHandler);
+    }
+
+    removeAllEventListener(theEvent: string) {
+        this._eventHandler.removeAllEventListeners(theEvent);
+    }
+}

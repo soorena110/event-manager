@@ -1,95 +1,111 @@
-import {ModeManagementEventManager, ModeManagementEventHandler} from "./EventHandler";
+import {EventHandlerClass} from "./EventHandler";
+import {clearModes, loadModes, saveMode} from "./_storageUtils";
+import {logActiveModes} from "./_utils";
 
-const ModeManagementLocalStorageKey = 'ModeManagementData';
 
-export class ModeManagementClass {
-    private _activeModes = [] as string[];
-    private _keys = [] as string[];
-    private _eventHandler = new ModeManagementEventManager();
+class ModeManagementClass extends EventHandlerClass {
+    public localStorageKey?: string;
+    private _flags = [] as string[];
+    private _modes = {} as { [key: string]: any };
     public modeModifier = {} as any;
 
     constructor() {
-        const savedMode = localStorage.getItem(ModeManagementLocalStorageKey);
-        if (savedMode)
-            this._activeModes = JSON.parse(savedMode);
-        this.modeModifier.showActiveModes = () => this._logActiveModes();
-        this.modeModifier.clear = () => this._clear();
+        super();
 
-        this._setActiveModesFromUrl();
-        if (this._activeModes.length)
-            this._logActiveModes();
+        this._modes = loadModes(this.localStorageKey);
+        if (Object.keys(this._modes).length > 0)
+            logActiveModes(this.localStorageKey);
+
+        Object.defineProperty(this.modeModifier, 'activeModes', {get: () => this.logActiveModes()});
+        Object.defineProperty(this.modeModifier, 'activeModes', {get: () => this.clear()});
     }
 
-    add(name: string, defaultValue = false) {
-        if (defaultValue && this._activeModes.indexOf(name) == -1)
-            this._activeModes.push(name);
-        if (this._keys.indexOf(name) == -1) {
-            this._keys.push(name);
-            this.modeModifier[name + 'On'] = () => this._set(name, true);
-            this.modeModifier[name + 'Off'] = () => this._set(name, false);
-        }
+    logActiveModes() {
+        logActiveModes(this.localStorageKey);
+        return '';
     }
 
-    addEventListener(theEvent: string, theHandler: ModeManagementEventHandler) {
-        this._eventHandler.addEventListener(theEvent, theHandler);
+    clear() {
+        this._modes = {};
+        clearModes();
+        return 'cleared';
     }
 
-    removeEventListener(theEvent: string, theHandler: ModeManagementEventHandler) {
-        this._eventHandler.removeEventListener(theEvent, theHandler);
+    add(name: string, defaultValue: any) {
+        if (!this._modes[name])
+            this._modes[name] = defaultValue;
+
+        if (!this.modeModifier[name])
+            this._defineModeModifierGetSetProps(name);
     }
 
-    removeAllEventListener(theEvent: string) {
-        this._eventHandler.removeAllEventListeners(theEvent);
+    set(name: string, value: any, options?: { preventTriggerEvents: boolean }) {
+        this._modes[name] = value;
+
+        if (!options || !options.preventTriggerEvents)
+            this._eventHandler.trigger(name, value);
+
+        saveMode(name, value, this.localStorageKey);
+
+        if (this.modeModifier[name] == undefined)
+            this._defineModeModifierGetSetProps(name);
     }
 
-    getEnabled(name: string) {
-        if (this._keys.indexOf(name) == -1) {
+    private _defineModeModifierGetSetProps(name: string) {
+        Object.defineProperty(this.modeModifier, name, {
+            get: () => this.get(name),
+            set: (value) => this.set(name, value)
+        });
+    }
+
+    get(name: string) {
+        if (this._modes[name] == undefined)
             console.error(`'${name}' does not exist in ModeManagement`);
-            return false;
-        }
-
-        return this._activeModes.indexOf(name) != -1;
+        return this._modes[name];
     }
 
-    setEnabled(name: string, enability: boolean) {
-        if (this.getEnabled(name) == enability)
-            return;
-        this.modeModifier[name + (enability ? 'On' : 'Off')]();
-        this._eventHandler.trigger(name, enability)
+
+    addFlag(name: string, defaultValue: boolean) {
+        if (!this._modes[name])
+            this._modes[name] = defaultValue;
+
+        if (this.modeModifier[name] == undefined)
+            this._defineModeModifierGetSetBooleanProps(name, defaultValue);
     }
 
-    private _setActiveModesFromUrl() {
-        const urlModeSplit = window.location.href.split('mode=');
-        if (urlModeSplit.length >= 2)
-            urlModeSplit[1].split(',').forEach(mode =>
-                this._activeModes.push(mode))
+    private _defineModeModifierGetSetBooleanProps(name: string, value: boolean) {
+        const newPropName = name + (value ? '_off' : '_on');
+        const deletingPropName = name + (!value ? '_off' : '_on');
+
+        if (this.modeModifier[deletingPropName])
+            delete this.modeModifier[deletingPropName];
+
+        if (!this.modeModifier[newPropName])
+            Object.defineProperty(this.modeModifier, newPropName, {
+                get: () => this.set(name, true)
+            });
     }
 
-    private _clear() {
-        this._activeModes = [];
-        this._saveStorage();
+    setFlag(name: string, value: any, options?: { preventTriggerEvents: boolean }) {
+        if (this._modes[name] != value)
+            this._modes[name] = value;
+
+        if (!options || !options.preventTriggerEvents)
+            this._eventHandler.trigger(name, value);
+
+        if (this.modeModifier[name] == undefined)
+            this._defineModeModifierGetSetBooleanProps(name, value);
     }
 
-    private _set(name: string, isEnabled: boolean) {
-        const ix = this._activeModes.indexOf(name);
-        if (isEnabled && ix == -1)
-            this._activeModes.push(name);
-        if (!isEnabled && ix != -1)
-            this._activeModes.splice(ix, 1);
-        this._saveStorage();
-    }
-
-    private _saveStorage() {
-        localStorage.setItem(ModeManagementLocalStorageKey, JSON.stringify(this._activeModes));
-        this._logActiveModes()
-    }
-
-    private _logActiveModes() {
-        const activeModes = this._activeModes && this._activeModes.length ? this._activeModes.join(', ') : '- No Active Mode -';
-        console.log('%c  Mode  %c ' + activeModes, 'background:orange;color:black', 'color:orange');
+    getFlag(name: string) {
+        if (this._modes[name] == undefined)
+            console.error(`'${name}' does not exist in ModeManagement`);
+        return this._modes[name];
     }
 
 }
+
+export {ModeManagementClass};
 
 const ModeManagement = new ModeManagementClass();
 export default ModeManagement;
