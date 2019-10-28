@@ -1,5 +1,5 @@
 {
-  "name": "web-events",
+  "name": "web-event",
   "version": "0.6.0",
   "description": "Web tools to change or trace variable in runtime. It works via Console window in Browser DeveloperTool. ;)",
   "main": "./lib/index.js",
@@ -10,10 +10,10 @@
     "start": "webpack-dev-server -d --env.dev",
     "build": "npm run clean & webpack -p --env.prod",
     "postbuild": "tsc --emitDeclarationOnly --declaration",
-    "deploy": "npm run build & npm run build:dev & npm run postbuild & npm publish --access=public"
+    "deploy": "npm run build & npm run postbuild & npm publish --access=public"
   },
   "keywords": [
-    "web events",
+    "web event",
     "mode",
     "management",
     "trace",
