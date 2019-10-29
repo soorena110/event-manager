@@ -19,11 +19,11 @@ export default class TraceLogger {
         return !!this.settings.logs[key]
     }
 
-    _getStorageKey() {
-        return 'logSetting.';
+    private _getStorageKey() {
+        return 'logSetting.' + this._name;
     }
 
-    _saveLogSetting() {
+    private _saveLogSetting() {
         try {
             const logStrings = JSON.stringify(this.settings.logs);
             localStorage.setItem(this._getStorageKey(), logStrings);
@@ -32,7 +32,7 @@ export default class TraceLogger {
     };
 
 
-    _loadPreviousSettingFromLocalStorage() {
+    private _loadPreviousSettingFromLocalStorage() {
         if (!window.localStorage)
             return {};
 
@@ -45,7 +45,7 @@ export default class TraceLogger {
         return {};
     }
 
-    _loadPreviousSetting = () => {
+    private _loadPreviousSetting = () => {
         const previousLogSetting = this._loadPreviousSettingFromLocalStorage();
         this._keys.forEach((verb, ix) => {
             let value = previousLogSetting[verb];
@@ -55,7 +55,7 @@ export default class TraceLogger {
         });
     };
 
-    _createTraceObjcet() {
+    private _createTraceObjcet() {
         const win = window as any;
         if (!win.$trace) win.$trace = {};
 

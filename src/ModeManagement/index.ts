@@ -80,8 +80,7 @@ class ModeManagementClass extends EventHandlerClass {
         if (!options || !options.preventTriggerEvents)
             this._eventHandler.trigger(name, value);
 
-        if (this.modeModifier[name] == undefined)
-            this._defineModeModifierGetSetBooleanProps(name, value);
+        this._defineModeModifierGetSetBooleanProps(name, value);
     }
 
 
@@ -95,8 +94,8 @@ class ModeManagementClass extends EventHandlerClass {
         if (!(newPropName in this.modeModifier))
             Object.defineProperty(this.modeModifier, newPropName, {
                 get: () => {
-                    this.set(name, value);
-                    return `$mode.${name} is set to '${value}'`;
+                    this.set(name, !value);
+                    return `$mode.${name} is set to '${!value}'`;
                 },
                 configurable: true
             });
