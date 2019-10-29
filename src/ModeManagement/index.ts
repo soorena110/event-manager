@@ -1,7 +1,9 @@
 import {EventHandlerClass} from "./EventHandler";
 import {clearModes, loadModes, saveMode} from "./_storageUtils";
 import {logActiveModes} from "./_utils";
+import TraceLogger from "../TraceLogger";
 
+const logSettings = new TraceLogger('modeManager', ['verbose']);
 
 class ModeManagementClass extends EventHandlerClass {
     public localStorageKey?: string;
@@ -12,7 +14,7 @@ class ModeManagementClass extends EventHandlerClass {
         super();
 
         this._modes = loadModes(this.localStorageKey);
-        if (Object.keys(this._modes).length > 0)
+        if (logSettings.get('verbose'))
             logActiveModes(this.localStorageKey);
 
         Object.defineProperty(this.modeModifier, 'activeModes', {get: () => this.logActiveModes()});
@@ -31,7 +33,7 @@ class ModeManagementClass extends EventHandlerClass {
     }
 
     add(name: string, defaultValue: any) {
-        if (!this._modes[name])
+        if (this._modes[name] == undefined)
             this._modes[name] = defaultValue;
 
         if (!this.modeModifier[name])
@@ -46,15 +48,15 @@ class ModeManagementClass extends EventHandlerClass {
 
         saveMode(name, value, this.localStorageKey);
 
-        if (this.modeModifier[name] == undefined)
-            this._defineModeModifierGetSetProps(name);
+        this._defineModeModifierGetSetProps(name);
     }
 
     private _defineModeModifierGetSetProps(name: string) {
-        Object.defineProperty(this.modeModifier, name, {
-            get: () => this.get(name),
-            set: (value) => this.set(name, value)
-        });
+        if (!(name in this.modeModifier))
+            Object.defineProperty(this.modeModifier, name, {
+                get: () => this.get(name),
+                set: (value) => this.set(name, value)
+            });
     }
 
     get(name: string) {
@@ -65,24 +67,10 @@ class ModeManagementClass extends EventHandlerClass {
 
 
     addFlag(name: string, defaultValue: boolean) {
-        if (!this._modes[name])
+        if (this._modes[name] == undefined)
             this._modes[name] = defaultValue;
 
-        if (this.modeModifier[name] == undefined)
-            this._defineModeModifierGetSetBooleanProps(name, defaultValue);
-    }
-
-    private _defineModeModifierGetSetBooleanProps(name: string, value: boolean) {
-        const newPropName = name + (value ? '_off' : '_on');
-        const deletingPropName = name + (!value ? '_off' : '_on');
-
-        if (this.modeModifier[deletingPropName])
-            delete this.modeModifier[deletingPropName];
-
-        if (!this.modeModifier[newPropName])
-            Object.defineProperty(this.modeModifier, newPropName, {
-                get: () => this.set(name, true)
-            });
+        this._defineModeModifierGetSetBooleanProps(name, defaultValue);
     }
 
     setFlag(name: string, value: any, options?: { preventTriggerEvents: boolean }) {
@@ -94,6 +82,24 @@ class ModeManagementClass extends EventHandlerClass {
 
         if (this.modeModifier[name] == undefined)
             this._defineModeModifierGetSetBooleanProps(name, value);
+    }
+
+
+    private _defineModeModifierGetSetBooleanProps(name: string, value: boolean) {
+        const newPropName = name + (value ? '_off' : '_on');
+        const deletingPropName = name + (!value ? '_off' : '_on');
+
+        if (deletingPropName in this.modeModifier)
+            delete this.modeModifier[deletingPropName];
+
+        if (!(newPropName in this.modeModifier))
+            Object.defineProperty(this.modeModifier, newPropName, {
+                get: () => {
+                    this.set(name, value);
+                    return `$mode.${name} is set to '${value}'`;
+                },
+                configurable: true
+            });
     }
 
     getFlag(name: string) {

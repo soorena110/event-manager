@@ -3,8 +3,20 @@ import * as React from "react";
 import {render} from 'react-dom';
 import {connectToTokenChange} from "..";
 
-ModeManagement.add('socket', true);
-ModeManagement.add('direct', false);
+ModeManagement.addFlag('socket', true);
+console.warn( ModeManagement.get('socket'));
+console.warn( ModeManagement.getFlag('socket'));
+ModeManagement.addFlag('socket', false);
+console.warn( ModeManagement.get('socket'));
+console.warn( ModeManagement.getFlag('socket'));
+ModeManagement.addFlag('socket', true);
+console.warn( ModeManagement.get('socket'));
+console.warn( ModeManagement.getFlag('socket'));
+ ModeManagement.set('socket', true);
+console.warn( ModeManagement.get('socket'));
+console.warn( ModeManagement.getFlag('socket'));
+
+ModeManagement.addFlag('direct', false);
 ModeManagement.add('url', 'https://google.com');
 
 ModeManagement.addEventListener('socket', e=> console.log('socket', e));
