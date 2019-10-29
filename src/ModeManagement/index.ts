@@ -16,7 +16,7 @@ class ModeManagementClass extends EventHandlerClass {
             logActiveModes(this.localStorageKey);
 
         Object.defineProperty(this.modeModifier, 'activeModes', {get: () => this.logActiveModes()});
-        Object.defineProperty(this.modeModifier, 'activeModes', {get: () => this.clear()});
+        Object.defineProperty(this.modeModifier, 'clear', {get: () => this.clear()});
     }
 
     logActiveModes() {
