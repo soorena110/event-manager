@@ -1,18 +1,18 @@
-import {EventHandlerClass} from "./EventHandler";
 import {clearModes, loadModes, saveMode} from "./_storageUtils";
 import {logActiveModes} from "./_utils";
-import TraceLogger from "../TraceLogger";
+import {EventManager, TraceLogger} from "azi-tools";
 
+export type ModeManagementEventHandler = (newValue: string) => void;
 const logSettings = new TraceLogger('modeManager', ['verbose']);
 
-class ModeManagementClass extends EventHandlerClass {
+class ModeManagementClass {
+    private _eventHandler = new EventManager<ModeManagementEventHandler>();
+
     public localStorageKey?: string;
     private _modes = {} as { [key: string]: any };
     public modeModifier = {} as any;
 
     constructor() {
-        super();
-
         this._modes = loadModes(this.localStorageKey);
         if (logSettings.get('verbose'))
             logActiveModes(this.localStorageKey);
@@ -107,11 +107,18 @@ class ModeManagementClass extends EventHandlerClass {
         return this._modes[name];
     }
 
+    addEventListener = this._eventHandler.addEventListener;
+    removeEventListener = this._eventHandler.removeEventListener;
+    removeAllListeners = this._eventHandler.removeAllListeners;
 }
 
 export {ModeManagementClass};
 
-const ModeManagement = new ModeManagementClass();
-export default ModeManagement;
-
-(window as any).$mode = ModeManagement.modeModifier;
+const win = window as any;
+if (!('$_modeManager' in window)) {
+    win.$_modeManager = new ModeManagementClass();
+    Object.defineProperty(window, '$mode', {
+        get: () => win.$_modeManager.modeModifier
+    });
+}
+export default win.$_modeManager as ModeManagementClass;

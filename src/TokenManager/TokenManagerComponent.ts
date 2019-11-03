@@ -1,10 +1,13 @@
-import {EventTypes, TokenManagerEventHandler, TokenManagerEventHandlerFunctionType} from "./EventHandler";
+import {EventManager} from "azi-tools";
+
+export type TokenManagerEventHandlerFunctionType = (token?: string) => void;
+export type EventTypes = 'change';
 
 const tokenName = 'token';
 
 export class TokenManagerComponent {
     private _token ?: string | null;
-    private _eventHandler = new TokenManagerEventHandler();
+    private _eventHandler = new EventManager();
 
 
     getToken() {
@@ -32,7 +35,7 @@ export class TokenManagerComponent {
         this._eventHandler.trigger('change', undefined)
     }
 
-    addEventListener(eventName: EventTypes, handler: TokenManagerEventHandlerFunctionType) {
-        this._eventHandler.addEventListener(eventName, handler)
-    }
+    addEventListener = this._eventHandler.addEventListener;
+    removeEventListener = this._eventHandler.removeEventListener;
+    removeAllListeners = this._eventHandler.removeAllListeners;
 }
