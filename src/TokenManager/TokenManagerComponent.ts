@@ -7,7 +7,7 @@ const tokenName = 'token';
 
 export class TokenManagerComponent {
     private _token ?: string | null;
-    eventHandler = new EventManager<TokenManagerEventHandlerFunctionType, EventTypes>();
+    events = new EventManager<TokenManagerEventHandlerFunctionType, EventTypes>();
 
 
     get token() {
@@ -27,7 +27,7 @@ export class TokenManagerComponent {
         else localStorage.removeItem(tokenName);
 
         this._token = newToken || null;
-        this.eventHandler.trigger('change', newToken);
+        this.events.trigger('change', newToken);
     }
 
     removeToken() {
