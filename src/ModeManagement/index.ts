@@ -73,12 +73,14 @@ class ModeManagementClass {
         this._defineModeModifierGetSetBooleanProps(name, defaultValue);
     }
 
-    setFlag(name: string, value: any, options?: { preventTriggerEvents: boolean }) {
+    setFlag(name: string, value: boolean, options?: { preventTriggerEvents: boolean }) {
         if (this._modes[name] != value)
             this._modes[name] = value;
 
         if (!options || !options.preventTriggerEvents)
             this.events.trigger(name, value);
+
+        saveMode(name, value, this.localStorageKey);
 
         this._defineModeModifierGetSetBooleanProps(name, value);
     }
