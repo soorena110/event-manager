@@ -1,5 +1,3 @@
-export {default as ModeManagement} from './ModeManagement'
+export {default as ModeManagement, connectToModeChange} from './ModeManagement'
+export {default as TokenManager, connectToTokenChange} from './TokenManager';
 export {TokenManagerComponent} from './TokenManager/TokenManagerComponent';
-export {default as TokenManager} from './TokenManager';
-export * from './TokenManager/HOCSubscription'
-export * from './ModeManagement/HOCSubscription'

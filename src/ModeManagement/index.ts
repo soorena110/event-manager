@@ -6,7 +6,7 @@ export type ModeManagementEventHandler = (newValue: string) => void;
 const logSettings = new TraceLogger('modeManager', ['verbose']);
 
 class ModeManagementClass {
-    private _eventHandler = new EventManager<ModeManagementEventHandler>();
+    eventHandler = new EventManager<ModeManagementEventHandler>();
 
     public localStorageKey?: string;
     private _modes = {} as { [key: string]: any };
@@ -44,7 +44,7 @@ class ModeManagementClass {
         this._modes[name] = value;
 
         if (!options || !options.preventTriggerEvents)
-            this._eventHandler.trigger(name, value);
+            this.eventHandler.trigger(name, value);
 
         saveMode(name, value, this.localStorageKey);
 
@@ -78,7 +78,7 @@ class ModeManagementClass {
             this._modes[name] = value;
 
         if (!options || !options.preventTriggerEvents)
-            this._eventHandler.trigger(name, value);
+            this.eventHandler.trigger(name, value);
 
         this._defineModeModifierGetSetBooleanProps(name, value);
     }
@@ -106,10 +106,6 @@ class ModeManagementClass {
             console.error(`'${name}' does not exist in ModeManagement`);
         return this._modes[name];
     }
-
-    addEventListener = this._eventHandler.addEventListener;
-    removeEventListener = this._eventHandler.removeEventListener;
-    removeAllListeners = this._eventHandler.removeAllListeners;
 }
 
 export {ModeManagementClass};
@@ -121,4 +117,6 @@ if (!('$_modeManager' in window)) {
         get: () => win.$_modeManager.modeModifier
     });
 }
-export default win.$_modeManager as ModeManagementClass;
+const ModeManagement = win.$_modeManager as ModeManagementClass;
+export default ModeManagement;
+export const connectToModeChange = ModeManagement.eventHandler.connectToEvent;
