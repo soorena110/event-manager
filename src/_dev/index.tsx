@@ -17,9 +17,9 @@ console.warn(ModeManagement.getFlag('socket'));
 ModeManagement.addFlag('direct', false);
 ModeManagement.add('url', 'https://google.com');
 
-ModeManagement.addEventListener('socket', e => console.log('socket', e));
-ModeManagement.addEventListener('direct', e => console.log('direct', e));
-ModeManagement.addEventListener('url', e => console.log('url', e));
+ModeManagement.events.addEventListener('socket', e => console.log('socket', e));
+ModeManagement.events.addEventListener('direct', e => console.log('direct', e));
+ModeManagement.events.addEventListener('url', e => console.log('url', e));
 
 
 // TokenManager.addEventListener('change', e => console.log('token is : ', e));

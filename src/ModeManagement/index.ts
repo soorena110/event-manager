@@ -6,7 +6,7 @@ export type ModeManagementEventHandler = (newValue: string) => void;
 const logSettings = new TraceLogger('modeManager', ['verbose']);
 
 class ModeManagementClass {
-    eventHandler = new EventManager<ModeManagementEventHandler>();
+    events = new EventManager<ModeManagementEventHandler, string>();
 
     public localStorageKey?: string;
     private _modes = {} as { [key: string]: any };
@@ -44,7 +44,7 @@ class ModeManagementClass {
         this._modes[name] = value;
 
         if (!options || !options.preventTriggerEvents)
-            this.eventHandler.trigger(name, value);
+            this.events.trigger(name, value);
 
         saveMode(name, value, this.localStorageKey);
 
@@ -78,7 +78,7 @@ class ModeManagementClass {
             this._modes[name] = value;
 
         if (!options || !options.preventTriggerEvents)
-            this.eventHandler.trigger(name, value);
+            this.events.trigger(name, value);
 
         this._defineModeModifierGetSetBooleanProps(name, value);
     }
@@ -119,4 +119,4 @@ if (!('$_modeManager' in window)) {
 }
 const ModeManagement = win.$_modeManager as ModeManagementClass;
 export default ModeManagement;
-export const connectToModeChange = ModeManagement.eventHandler.connectToEvent;
+export const connectToModeChange = ModeManagement.events.connectToEvent;

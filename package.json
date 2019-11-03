@@ -35,6 +35,6 @@
     "webpack-dev-server": "^3.8.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "azi-tools": "^0.2.1"
+    "azi-tools": "^0.2.2"
   }
 }
