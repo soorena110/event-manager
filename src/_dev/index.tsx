@@ -26,23 +26,23 @@ ModeManagement.events.addEventListener('url', e => console.log('url', e));
 TokenManager.events.addEventListener('change', e => console.log('token is : ', e));
 
 
-class MainApplication extends React.Component {
-    render() {
-        return new Date().toString();
-    }
-}
-
-const ConnectedMainApplication = connectToTokenChange(MainApplication);
-
-render(
-    <ConnectedMainApplication/>,
-    document.getElementById("root")
-);
-
-let i = 0;
-setInterval(() => {
-    TokenManager.token = (i++).toString();
-}, 1000);
-
-declare const module: any;
-module.hot.accept();
+// class MainApplication extends React.Component {
+//     render() {
+//         return new Date().toString();
+//     }
+// }
+//
+// const ConnectedMainApplication = connectToTokenChange(MainApplication);
+//
+// render(
+//     <ConnectedMainApplication/>,
+//     document.getElementById("root")
+// );
+//
+// let i = 0;
+// setInterval(() => {
+//     TokenManager.token = (i++).toString();
+// }, 1000);
+//
+// declare const module: any;
+// module.hot.accept();

@@ -94,7 +94,7 @@ class ModeManagementClass {
         if (!(newPropName in this.modeModifier))
             Object.defineProperty(this.modeModifier, newPropName, {
                 get: () => {
-                    this.set(name, !value);
+                    this.setFlag(name, !value);
                     return `$mode.${name} is set to '${!value}'`;
                 },
                 configurable: true
