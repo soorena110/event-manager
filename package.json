@@ -26,17 +26,19 @@
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^16.9.5",
+    "@types/react-cookies": "^0.1.0",
     "@types/react-dom": "^16.9.1",
     "awesome-typescript-loader": "^5.2.1",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
     "typescript": "^3.4.5",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41.1",
     "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.2",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
-    "azi-tools": "^0.2.2"
+    "azi-tools": "^0.2.2",
+    "react-cookies": "^0.1.1"
   }
 }
