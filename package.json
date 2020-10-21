@@ -1,6 +1,6 @@
 {
   "name": "web-event",
-  "version": "0.11.6",
+  "version": "0.13.0",
   "description": "Web tools to change or trace variable in runtime. It works via Console window in Browser DeveloperTool. ;)",
   "main": "./lib/index.js",
   "repository": "https://github.com/soorena110/web-trace.git",
