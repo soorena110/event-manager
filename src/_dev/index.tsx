@@ -1,48 +1,33 @@
-import {connectToTokenChange, ModeManagement, TokenManager} from "../index";
-import * as React from "react";
+import * as React from 'react';
+import {useEffect} from 'react';
 import {render} from "react-dom";
+import {ModeManagement, TraceLogger, useMode} from "../index";
 
-ModeManagement.addFlag('socket', true);
-console.warn(ModeManagement.get('socket'));
-console.warn(ModeManagement.getFlag('socket'));
-ModeManagement.addFlag('socket', false);
-console.warn(ModeManagement.get('socket'));
-console.warn(ModeManagement.getFlag('socket'));
-ModeManagement.addFlag('socket', true);
-console.warn(ModeManagement.get('socket'));
-console.warn(ModeManagement.getFlag('socket'));
-ModeManagement.set('socket', true);
-console.warn(ModeManagement.get('socket'));
-console.warn(ModeManagement.getFlag('socket'));
+ModeManagement.add('test', 'this is a sample mode');
 
-ModeManagement.addFlag('direct', false);
-ModeManagement.add('url', 'https://google.com');
+const tracer = new TraceLogger('test', ['verbose']);
 
-ModeManagement.events.addEventListener('socket', e => console.log('socket', e));
-ModeManagement.events.addEventListener('direct', e => console.log('direct', e));
-ModeManagement.events.addEventListener('url', e => console.log('url', e));
+function DemoApplication() {
+    const mode = useMode('test');
+
+    useEffect(() => {
+        const to = setInterval(() => {
+            if (tracer.get('verbose'))
+                console.log('Tracer : verbose is on !')
+        }, 3000);
+        clearInterval(to);
+    }, [])
+
+    return <>
+        <div>mode: {mode}</div>
+    </>
+}
+
+render(
+    <DemoApplication/>,
+    document.getElementById("root")
+);
 
 
-TokenManager.events.addEventListener('change', e => console.log('token is : ', e));
-
-
-// class MainApplication extends React.Component {
-//     render() {
-//         return new Date().toString();
-//     }
-// }
-//
-// const ConnectedMainApplication = connectToTokenChange(MainApplication);
-//
-// render(
-//     <ConnectedMainApplication/>,
-//     document.getElementById("root")
-// );
-//
-// let i = 0;
-// setInterval(() => {
-//     TokenManager.token = (i++).toString();
-// }, 1000);
-//
-// declare const module: any;
-// module.hot.accept();
+// @ts-ignore
+module.hot.accept();

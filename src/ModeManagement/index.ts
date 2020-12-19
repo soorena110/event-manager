@@ -1,124 +1,123 @@
-import {clearModes, loadModes, saveMode} from "./_storageUtils";
-import {logActiveModes} from "./_utils";
-import {EventManager, TraceLogger} from "azi-tools";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { clearModes, loadModes, saveMode } from './_storageUtils';
+import { logActiveModes } from './_utils';
+import TraceLogger from './TraceLogger';
+import EventManager from './EventManager';
 
-export type ModeManagementEventHandler = (newValue: string) => void;
 const logSettings = new TraceLogger('modeManager', ['verbose']);
 
 class ModeManagementClass {
-    events = new EventManager<ModeManagementEventHandler, string>();
+  events = new EventManager<any, string>();
 
-    public localStorageKey?: string;
-    private _modes = {} as { [key: string]: any };
-    public modeModifier = {} as any;
+  public localStorageKey?: string;
+  private _modes = {} as { [key: string]: any };
+  public modeModifier = {} as any;
 
-    constructor() {
-        this._modes = loadModes(this.localStorageKey);
-        if (logSettings.get('verbose'))
-            logActiveModes(this.localStorageKey);
+  constructor() {
+    this._modes = loadModes(this.localStorageKey);
+    if (logSettings.get('verbose'))
+      logActiveModes(this.localStorageKey);
 
-        Object.defineProperty(this.modeModifier, 'activeModes', {get: () => this.logActiveModes()});
-        Object.defineProperty(this.modeModifier, 'clear', {get: () => this.clear()});
-    }
+    Object.defineProperty(this.modeModifier, 'activeModes', { get: () => this.logActiveModes() });
+    Object.defineProperty(this.modeModifier, 'clear', { get: () => this.clear() });
+  }
 
-    logActiveModes() {
-        logActiveModes(this.localStorageKey);
-        return '';
-    }
+  logActiveModes() {
+    logActiveModes(this.localStorageKey);
+  }
 
-    clear() {
-        this._modes = {};
-        clearModes();
-        return 'cleared';
-    }
+  clear() {
+    this._modes = {};
+    clearModes();
+    return 'cleared';
+  }
 
-    add(name: string, defaultValue: any) {
-        if (this._modes[name] == undefined)
-            this._modes[name] = defaultValue;
+  add(modeName: string, defaultValue: any) {
+    if (this._modes[modeName] == undefined)
+      this._modes[modeName] = defaultValue;
 
-        if (!this.modeModifier[name])
-            this._defineModeModifierGetSetProps(name);
-    }
+    if (!this.modeModifier[modeName])
+      this._defineModeModifierGetSetProps(modeName);
+  }
 
-    set(name: string, value: any, options?: { preventTriggerEvents: boolean }) {
-        this._modes[name] = value;
+  set(modeName: string, value: any, options?: { preventTriggerEvents: boolean }) {
+    this._modes[modeName] = value;
 
-        if (!options || !options.preventTriggerEvents)
-            this.events.trigger(name, value);
+    if (!options || !options.preventTriggerEvents)
+      this.events.trigger(modeName, value);
 
-        saveMode(name, value, this.localStorageKey);
+    saveMode(modeName, value, this.localStorageKey);
 
-        this._defineModeModifierGetSetProps(name);
-    }
+    this._defineModeModifierGetSetProps(modeName);
+  }
 
-    private _defineModeModifierGetSetProps(name: string) {
-        if (!(name in this.modeModifier))
-            Object.defineProperty(this.modeModifier, name, {
-                get: () => this.get(name),
-                set: (value) => this.set(name, value)
-            });
-    }
+  private _defineModeModifierGetSetProps(modeName: string) {
+    if (!(modeName in this.modeModifier))
+      Object.defineProperty(this.modeModifier, modeName, {
+        get: () => this.get(modeName),
+        set: (value) => this.set(modeName, value),
+      });
+  }
 
-    get(name: string) {
-        if (this._modes[name] == undefined)
-            console.error(`'${name}' does not exist in ModeManagement`);
-        return this._modes[name];
-    }
-
-
-    addFlag(name: string, defaultValue: boolean) {
-        if (this._modes[name] == undefined)
-            this._modes[name] = defaultValue;
-
-        this._defineModeModifierGetSetBooleanProps(name, defaultValue);
-    }
-
-    setFlag(name: string, value: boolean, options?: { preventTriggerEvents: boolean }) {
-        if (this._modes[name] != value)
-            this._modes[name] = value;
-
-        if (!options || !options.preventTriggerEvents)
-            this.events.trigger(name, value);
-
-        saveMode(name, value, this.localStorageKey);
-
-        this._defineModeModifierGetSetBooleanProps(name, value);
-    }
+  get(modeName: string) {
+    if (this._modes[modeName] == undefined)
+      console.warn(`'${modeName}' does not exist in ModeManagement`);
+    return this._modes[modeName];
+  }
 
 
-    private _defineModeModifierGetSetBooleanProps(name: string, value: boolean) {
-        const newPropName = name + (value ? '_off' : '_on');
-        const deletingPropName = name + (!value ? '_off' : '_on');
+  addFlag(modeName: string, defaultValue: boolean) {
+    if (this._modes[modeName] == undefined)
+      this._modes[modeName] = defaultValue;
 
-        if (deletingPropName in this.modeModifier)
-            delete this.modeModifier[deletingPropName];
+    this._defineModeModifierGetSetBooleanProps(modeName, defaultValue);
+  }
 
-        if (!(newPropName in this.modeModifier))
-            Object.defineProperty(this.modeModifier, newPropName, {
-                get: () => {
-                    this.setFlag(name, !value);
-                    return `$mode.${name} is set to '${!value}'`;
-                },
-                configurable: true
-            });
-    }
+  setFlag(modeName: string, value: boolean, options?: { preventTriggerEvents: boolean }) {
+    if (this._modes[modeName] != value)
+      this._modes[modeName] = value;
 
-    getFlag(name: string) {
-        if (this._modes[name] == undefined)
-            console.error(`'${name}' does not exist in ModeManagement`);
-        return this._modes[name];
-    }
+    if (!options || !options.preventTriggerEvents)
+      this.events.trigger(modeName, value);
+
+    saveMode(modeName, value, this.localStorageKey);
+
+    this._defineModeModifierGetSetBooleanProps(modeName, value);
+  }
+
+
+  private _defineModeModifierGetSetBooleanProps(modeName: string, value: boolean) {
+    const newPropName = modeName + (value ? '_off' : '_on');
+    const deletingPropName = modeName + (!value ? '_off' : '_on');
+
+    if (deletingPropName in this.modeModifier)
+      delete this.modeModifier[deletingPropName];
+
+    if (!(newPropName in this.modeModifier))
+      Object.defineProperty(this.modeModifier, newPropName, {
+        get: () => {
+          this.setFlag(modeName, !value);
+          return `$mode.${modeName} is set to '${!value}'`;
+        },
+        configurable: true,
+      });
+  }
+
+  getFlag(modeName: string) {
+    if (this._modes[modeName] == undefined)
+      console.warn(`'${modeName}' does not exist in ModeManagement`);
+    return this._modes[modeName];
+  }
 }
 
-export {ModeManagementClass};
+export { ModeManagementClass };
 
-const win = window as any;
-if (!('$_modeManager' in window)) {
-    win.$_modeManager = new ModeManagementClass();
-    Object.defineProperty(window, '$mode', {
-        get: () => win.$_modeManager.modeModifier
-    });
+const globalAsAny = global as any;
+if (!('$_modeManager' in global)) {
+  globalAsAny.$_modeManager = new ModeManagementClass();
+  Object.defineProperty(global, '$mode', {
+    get: () => globalAsAny.$_modeManager.modeModifier,
+  });
 }
-const ModeManagement = win.$_modeManager as ModeManagementClass;
+const ModeManagement = globalAsAny.$_modeManager as ModeManagementClass;
 export default ModeManagement;
-export const connectToModeChange = ModeManagement.events.connectToEvent;

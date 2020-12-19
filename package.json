@@ -1,44 +1,84 @@
 {
-  "name": "web-event",
-  "version": "0.13.0",
-  "description": "Web tools to change or trace variable in runtime. It works via Console window in Browser DeveloperTool. ;)",
-  "main": "./lib/index.js",
-  "repository": "https://github.com/soorena110/web-trace.git",
-  "typings": "./lib/index.d.ts",
+  "name": "mode-management",
+  "version": "1.0.3",
+  "description": "ModeManage is used for trunk-based development and also have some hidden logs and behaviours for test or development in runtime. ;)",
   "scripts": {
-    "clean": "rimraf dist",
-    "start": "webpack-dev-server -d --env.dev",
-    "build": "npm run clean & webpack -p --env.prod",
-    "postbuild": "tsc --emitDeclarationOnly --declaration",
-    "deploy": "npm run build & npm run postbuild & npm publish --access=public"
+    "start": "react-app-rewired start",
+    "ts-build": "rimraf ./dist/** && tsc",
+    "babel-build": "rimraf ./dist/** && babel ./src --out-dir dist --extensions '.ts,.tsx'",
+    "travis-deploy-once": "travis-deploy-once",
+    "semantic-release": "semantic-release",
+    "watch": "tsc -- --watch",
+    "test": "jest",
+    "deploy": "npm run ts-build && npm publish --access=public"
   },
-  "keywords": [
-    "web event",
-    "mode",
-    "management",
-    "trace",
-    "mode management",
-    "token manager",
-    "tools",
-    "application events"
+  "repository": {
+    "type": "git",
+    "start": "react-scripts start",
+    "url": "https://github.com/soorena110/ReactLightChart"
+  },
+  "bugs": {
+    "url": "https://github.com/soorena110/ReactLightChart/issues"
+  },
+  "files": [
+    "dist"
   ],
-  "author": "MohammadReza Azarang",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "keywords": [
+    "trunk based development",
+    "development command line tool",
+    "web event",
+    "mode management",
+    "modes",
+    "trace"
+  ],
+  "author": "MohammadReza Azarang.",
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^16.9.5",
-    "@types/react-cookies": "^0.1.0",
-    "@types/react-dom": "^16.9.1",
-    "awesome-typescript-loader": "^5.2.1",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "typescript": "^3.4.5",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.41.1",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.2"
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
+    "@babel/plugin-transform-typescript": "^7.3.2",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/react": "^16.8.5",
+    "@types/react-dom": "^16.8.2",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "eslint": "^7.13.0",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-test-renderer": "^16.8.3",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^15.13.3",
+    "tslint": "^5.13.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^4.1.2"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "react-native": "*"
   },
   "dependencies": {
-    "azi-tools": "^0.2.2",
-    "react-cookies": "^0.1.1"
+    "react-app-rewired": "^2.1.7",
+    "react-scripts": "^4.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
