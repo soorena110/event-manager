@@ -9,18 +9,14 @@
 
 To install, use below code
 
-```node
-npm
-install
-mode - management
+```
+npm install mode-management
 ```
 
 Or
 
-```node
-yarn
-add
-mode - management
+```
+yarn add mode-management
 ```
 
 # Mode Management Usage
@@ -53,7 +49,7 @@ switch (modeVersion) {
 ```
 
 Now in `development tools > console tab` you can write below code to change modes manually:
-![console-example.jpg](README/console-example.jpg)
+![console-example.jpg](README/console.jpg)
 For example this is screenshot of `Chrome dev tools > console tab`.
 
 You can also use hooks for React:
@@ -94,8 +90,8 @@ For changing modes you can also use `ModeManagement.set`:
 ModeManagement.set(MY_FEATURE_VERSION, 2);
 ```
 
-Some times your mode is boolean (flags). For example, you want to check whether it is `test-version` to show some elements to
-for Tester or Developers or not:
+Some times your mode is boolean (flags). For example, you want to check whether it is `test-version` to show some
+elements to for Tester or Developers or not:
 
 ```ts
 import {useModeFlag, useModeFlagMutation, ModeManagement} from "mode-managment";
@@ -105,7 +101,7 @@ const defaultStateForDevMode = false; // It means dev mode is off by default;
 ModeManagement.addFlag(DEV_MODE, defaultStateForDevMode);
 ModeManagement.setFlag(DEV_MODE, true);
 
-if(ModeManagement.getFlag(DEV_MODE)){
+if (ModeManagement.getFlag(DEV_MODE)) {
     showDevToolsForTestAndDevelop();
 }
 
@@ -114,22 +110,20 @@ const isDevMode = useModeFlag(DEV_MODE);
 const setIsDevMode = useModeFlagMutation(DEV_MODE);
 ```
 
-For activating boolean modes (flags). you can set them on or off in `console tab` in `Chrome dev tools`.
-To set `devMode` on:
-![console-example-2.png](README/console-example-2.png)
+For activating boolean modes (flags). you can set them on or off in `console tab` in `Chrome dev tools`. To
+set `devMode` on:
+![console2.png](README/console2.png)
 To set `devMode` off:
-![console-example-3.png](README/console-example-3.png) 
+![console3.png](README/console3.png)
 You don't need to call a function just read `$mode.devMode_on` to set the mode on and `$mode.devMode_off` to set it off.
 (You just press enter for a normal `JavaScript property call`.)
 
 To see all active Modes you can use the code below and press enter:
-![console-example-4.png](README/console-example-4.png)
-
+![console4.png](README/console4.png)
 
 ## Multiple Mode Managements
 
-You may need to have more than on your application.
-Then you should create an object of `ModeManagementClass`:
+You may need to have more than on your application. Then you should create an object of `ModeManagementClass`:
 
 ```ts
 import {ModeManagementClass} from "mode-managment";
@@ -145,26 +139,27 @@ const setMode = useModeMutation(DEV_MODE, secondModeManagement);
 ``` 
 
 # Trace Logger Usage
-Trace logger is a tool for logging, trace, develop and test.
-It is similar to ModeManagement but just for logging and is not accepting value, just boolean.
-ModeManagement its self, is using TraceLogger to log `active modes`.
+
+Trace logger is a tool for logging, trace, develop and test. It is similar to ModeManagement but just for logging and is
+not accepting value, just boolean. ModeManagement its self, is using TraceLogger to log `active modes`.
 
 For example below code will never log anything, unless you activate your logger in `console tab` of `Chrome dev tools`:
+
 ```ts
 
 const tracer = new TraceLogger('ajax', ['response', 'request', 'unauthorized']);
 
 // set below codes in interceptors ↓
-if(tracer.get('request'))
+if (tracer.get('request'))
     console.log(request);
-if(tracer.get('response'))
+if (tracer.get('response'))
     console.log(response);
-if(tracer.get('unauthorized') && response.status === 401)
+if (tracer.get('unauthorized') && response.status === 401)
     console.log('We have an unauthorized request!', request)
 ```
-For example if we want to see logs for every `request`, we should write below code in `console tab`: 
-![console-example-5.png](README/console-example-5.png)
 
+For example if we want to see logs for every `request`, we should write below code in `console tab`:
+![console5.png](README/console5.png)
 
 # Real Examples
 
