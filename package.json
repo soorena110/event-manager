@@ -1,6 +1,6 @@
 {
   "name": "mode-management",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "ModeManage is used for trunk-based development and also have some hidden logs and behaviours for test or development in runtime. ;)",
   "scripts": {
     "start": "react-app-rewired start",

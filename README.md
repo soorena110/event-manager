@@ -49,7 +49,9 @@ switch (modeVersion) {
 ```
 
 Now in `development tools > console tab` you can write below code to change modes manually:
+
 ![console-example.jpg](README/console.jpg)
+
 For example this is screenshot of `Chrome dev tools > console tab`.
 
 You can also use hooks for React:
@@ -112,13 +114,18 @@ const setIsDevMode = useModeFlagMutation(DEV_MODE);
 
 For activating boolean modes (flags). you can set them on or off in `console tab` in `Chrome dev tools`. To
 set `devMode` on:
+
 ![console2.png](README/console2.png)
+
 To set `devMode` off:
+
 ![console3.png](README/console3.png)
+
 You don't need to call a function just read `$mode.devMode_on` to set the mode on and `$mode.devMode_off` to set it off.
 (You just press enter for a normal `JavaScript property call`.)
 
 To see all active Modes you can use the code below and press enter:
+
 ![console4.png](README/console4.png)
 
 ## Multiple Mode Managements
@@ -159,6 +166,7 @@ if (tracer.get('unauthorized') && response.status === 401)
 ```
 
 For example if we want to see logs for every `request`, we should write below code in `console tab`:
+
 ![console5.png](README/console5.png)
 
 # Real Examples
